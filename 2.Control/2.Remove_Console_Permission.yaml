@@ -45,7 +45,7 @@
         password: '{{ vcenter_password }}'
         validate_certs: false
         role: Virtual Machine console user
-        principal: "{{ item }}@vclass.kh"
+        principal: 'VCLASS\{{ item }}'
         object_name: '{{ item }}'
         state: absent
         recursive: true
