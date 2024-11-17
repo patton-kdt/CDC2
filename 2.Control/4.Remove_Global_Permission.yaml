@@ -4,11 +4,11 @@
   gather_facts: no
   
   vars:
-    vcenter_hostname: "vcenter.example.com"
-    vcenter_username: "administrator@vsphere.local"
-    vcenter_password: "your_password"
+    vcenter_hostname: "vcsa.vclass.kh"
+    vcenter_username: "administrator@vsphere.kh"
+    vcenter_password: "VMware1!"
     vcenter_validate_certs: false
-    admin_group: "your_admin_group"
+    admin_group: "students@vclass.kh"
     
   tasks:
     - name: Remove Administrator permission for Global Inventory
