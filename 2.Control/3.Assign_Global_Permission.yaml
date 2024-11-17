@@ -1,0 +1,32 @@
+---
+- name: Configure vCenter Global Administrator Permission
+  hosts: localhost
+  gather_facts: no
+  
+  vars:
+    vcenter_hostname: "vcenter.example.com"
+    vcenter_username: "administrator@vsphere.local"
+    vcenter_password: "your_password"
+    vcenter_validate_certs: false
+    admin_group: "your_admin_group"
+    
+  tasks:
+    - name: Set Administrator permission for Global Inventory
+      community.vmware.vmware_object_role_permission:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: "{{ vcenter_validate_certs }}"
+        role: "Admin"
+        principal: "{{ admin_group }}"
+        group: true
+        object_type: "{{ item.type }}"
+        object_name: "{{ item.path }}"
+        recursive: true
+        state: present
+      loop:
+        - { type: 'Datacenter', path: '/' }  # Datacenter 객체
+        - { type: 'Folder', path: '/vm' }    # VM 및 템플릿
+        - { type: 'Folder', path: '/host' }  # 호스트 및 클러스터
+        - { type: 'Folder', path: '/datastore' }  # 데이터스토어
+        - { type: 'Folder', path: '/network' }    # 네트워크
