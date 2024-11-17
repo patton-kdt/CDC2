@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  vars:
+    ansible_python_interpreter: /bin/python3
+    vcenter_hostname: "200.200.200.252"
+    vcenter_username: "administrator@vsphere.kh"
+    vcenter_password: "VMware1!"
+    datacenter_name: "KH"
+    source: "Temp-IaC"
+
+  tasks:
+  - name: Clone IaC Template to each ESXi Hosts
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      name: "{{ item.vm }}"
+      datacenter: '{{ datacenter_name }}'
+      folder: "2.Templates"
+      esxi_hostname: '{{ item.host }}'
+      datastore: "{{ item.datastore }}"
+      template: "{{ source }}"
+    loop:
+      - { host: esxi-01.vclass.kh, datastore: Local-01, vm: IaC-01 }
+      - { host: esxi-02.vclass.kh, datastore: Local-02, vm: IaC-02 }
+      - { host: esxi-03.vclass.kh, datastore: Local-03, vm: IaC-03 }
+      - { host: esxi-04.vclass.kh, datastore: Local-04, vm: IaC-04 }
+      - { host: esxi-05.vclass.kh, datastore: Local-05, vm: IaC-05 }
+    delegate_to: localhost
+ 
