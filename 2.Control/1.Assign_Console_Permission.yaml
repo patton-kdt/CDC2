@@ -1,0 +1,53 @@
+---
+- hosts: localhost
+
+  vars:
+    ansible_python_interpreter: /bin/python3
+    vcenter_hostname: "200.200.200.252"
+    vcenter_username: "administrator@vsphere.kh"
+    vcenter_password: "VMware1!"
+    datacenter_name: "KH"
+    students:
+      - S00
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26     
+
+  tasks: 
+    - name: Assign user to VM folder
+      community.vmware.vmware_object_role_permission:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        validate_certs: false
+        role: Virtual Machine console user
+        principal: "{{ item }}@vclass.kh"
+        object_name: '{{ item }}'
+        state: present
+        recursive: true
+      loop: '{{ students }}'
+      delegate_to: localhost
+
