@@ -18,7 +18,7 @@
         password: "{{ vcenter_password }}"
         validate_certs: "{{ vcenter_validate_certs }}"
         role: "Admin"
-        principal: "{{ admin_group }}"
+        principal: students@vclass.kh
         group: true
         object_type: "{{ item.type }}"
         object_name: "{{ item.path }}"
