@@ -1,0 +1,55 @@
+---
+- hosts: localhost
+
+  vars:
+    ansible_python_interpreter: /bin/python3
+    vcenter_hostname: "200.200.200.252"
+    vcenter_username: "administrator@vsphere.kh"
+    vcenter_password: "VMware1!"
+    datacenter_name: "KH"
+
+  tasks: 
+    - name: Create a Students folder
+      community.vmware.vcenter_folder:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        validate_certs: no
+        datacenter: '{{ datacenter_name }}'
+        folder_name: '{{ item }}'
+        parent_folder: "3.Students"
+        state: present
+      register: sub_folder_creation_result
+      loop:
+        - S00
+        - S01
+        - S02
+        - S03
+        - S04
+        - S05
+        - S06
+        - S07
+        - S08
+        - S09
+        - S10
+        - S11
+        - S12
+        - S13
+        - S14
+        - S15
+        - S16
+        - S17
+        - S18
+        - S19
+        - S20
+        - S21
+        - S22
+        - S23
+        - S24
+        - S25
+        - S26
+      delegate_to: localhost
+
+# https://docs.ansible.com/ansible/latest/collections/community/vmware/vcenter_folder_module.html#parameter-parent_folder
+# If user wants to create a folder under ‘/DC0/vm/vm_folder’, this value will be ‘vm_folder’.
+# If user wants to create a folder under ‘/DC0/vm/folder1/folder2’, this value will be ‘folder1/folder2’.
