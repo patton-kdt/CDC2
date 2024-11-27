@@ -73,9 +73,9 @@
     - { id: L26, host: esxi-01.vclass.kh, datastore: Local-01 }
 
     VMs_Setup:
-    - { vm_name: -ESXi-01, host_name: sa-esxi-02, ip_addr: 10.10.10.12 }
-    - { vm_name: -ESXi-02, host_name: sa-esxi-03, ip_addr: 10.10.10.13 }
-    - { vm_name: -ESXi-03, host_name: sa-esxi-04, ip_addr: 10.10.10.14 }
+    - { vm_name: -ESXi-01, host_name: sa-esxi-01, ip_addr: 10.10.10.11 }
+    - { vm_name: -ESXi-02, host_name: sa-esxi-02, ip_addr: 10.10.10.12 }
+    - { vm_name: -ESXi-03, host_name: sa-esxi-03, ip_addr: 10.10.10.13 }
 
     PG_vLAN:
     - { name: -Mgmt,    vlan: 10 }
@@ -85,8 +85,8 @@
     - { name: -Trunk,   vlan: 4095 }
 
     ESXi_NICs:
-    - { label: "Network adapter 1", pg: -Mgmt }
-    - { label: "Network adapter 2", pg: -Mgmt }
+    - { label: "Network adapter 1", pg: -Trunk }
+    - { label: "Network adapter 2", pg: -Trunk }
     - { label: "Network adapter 3", pg: -Trunk }
     - { label: "Network adapter 4", pg: -Trunk }
 
@@ -206,7 +206,7 @@
       folder: "{{ datacenter_name + '/vm/' + parent_folder + '/' + item.id }}"
       esxi_hostname: '{{ item.host }}'
       datastore: "{{ item.datastore }}"
-      template: "LAB-DC"
+      template: "Lab-DC"
     loop: "{{ LID_ESXi }}"  
     delegate_to: localhost
 
@@ -220,7 +220,7 @@
       name: "{{ item.id + '-DC' }}"
       label: "Network adapter 1"
       network_name: "{{ item.id + '-Mgmt' }}"
-    loop: "{{ SID_ESXi }}"    
+    loop: "{{ LID_ESXi }}"    
     delegate_to: localhost
 
   - name: 10. Poweron DC
@@ -248,8 +248,8 @@
       folder: "{{ datacenter_name + '/vm/' + parent_folder + '/' + item[0].id }}"
       esxi_hostname: '{{ item[0].host }}'
       datastore: "{{ item[0].datastore }}"
-      template: "LAB-ESXi"
-    loop: "{{ SID_ESXi | product(VMs_Setup) | list }}"
+      template: "Lab-ESXi"
+    loop: "{{ LID_ESXi | product(VMs_Setup) | list }}"
     delegate_to: localhost
 
   - name: 12. Change ESXi-01 VM Nics
@@ -263,7 +263,7 @@
       network_name: "{{ item[0].id + item[1].pg }}"
       state: present
       force: yes
-    loop: "{{ SID_ESXi | product(ESXi_NICs) | list }}"
+    loop: "{{ LID_ESXi | product(ESXi_NICs) | list }}"
     delegate_to: localhost
 
   - name: 13. Change ESXi-02 VM Nics
@@ -277,7 +277,7 @@
       network_name: "{{ item[0].id + item[1].pg }}"
       state: present
       force: yes
-    loop: "{{ SID_ESXi | product(ESXi_NICs) | list }}"
+    loop: "{{ LID_ESXi | product(ESXi_NICs) | list }}"
     delegate_to: localhost
 
   - name: 14. Change ESXi-03 VM Nics
@@ -291,7 +291,7 @@
       network_name: "{{ item[0].id + item[1].pg }}"
       state: present
       force: yes
-    loop: "{{ SID_ESXi | product(ESXi_NICs) | list }}"
+    loop: "{{ LID_ESXi | product(ESXi_NICs) | list }}"
     delegate_to: localhost
 
   - name: 15. Power on ESXi VMs
@@ -302,7 +302,7 @@
       validate_certs: no
       name: "{{ item[0].id + item[1].vm_name }}"
       state: "poweredon"
-    loop: "{{ SID_ESXi | product(VMs_Setup) | list }}"
+    loop: "{{ LID_ESXi | product(VMs_Setup) | list }}"
     delegate_to: localhost
 
   - name: 16. Waiting boot-up
