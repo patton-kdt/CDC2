@@ -168,7 +168,7 @@
     loop: "{{ LID_ESXi }}"  
     delegate_to: localhost
 
-  - name: 06. Change Router - LAN Portgroup
+  - name: 07. Change Router - LAN Portgroup
     community.vmware.vmware_guest_network:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -178,10 +178,10 @@
       name: "{{ item.id + '-Router' }}"
       label: "Network adapter 2"
       network_name: "{{ item.id + '-Trunk' }}"
-    loop: "{{ SID_ESXi }}"    
+    loop: "{{ LID_ESXi }}"    
     delegate_to: localhost
 
-  - name: 07. Poweron Router
+  - name: 08. Poweron Router
     community.vmware.vmware_guest:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -190,11 +190,11 @@
       name: "{{ item.id + '-Router' }}"
       state: "poweredon"
       state_change_timeout: 60
-    loop: "{{ SID_ESXi }}"
+    loop: "{{ LID_ESXi }}"
     delegate_to: localhost
 
 
-  - name: 08.Deploy LAB Domain Controller
+  - name: 09.Deploy LAB Domain Controller
     community.vmware.vmware_guest:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -207,7 +207,7 @@
       esxi_hostname: '{{ item.host }}'
       datastore: "{{ item.datastore }}"
       template: "LAB-DC"
-    loop: "{{ SID_ESXi }}"  
+    loop: "{{ LID_ESXi }}"  
     delegate_to: localhost
 
   - name: 09. Change DC LAN Portgroup
