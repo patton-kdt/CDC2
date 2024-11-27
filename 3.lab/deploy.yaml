@@ -44,33 +44,33 @@
     
     
     LID_ESXi: 
-    - { id: L00, host: esxi-04.vclass.kh, datasotre: Local-04 }
-    - { id: L01, host: esxi-01.vclass.kh, datasotre: Local-01 }
-    - { id: L02, host: esxi-02.vclass.kh, datasotre: Local-02 }
-    - { id: L03, host: esxi-03.vclass.kh, datasotre: Local-03 }
-    - { id: L04, host: esxi-04.vclass.kh, datasotre: Local-04 }
-    - { id: L05, host: esxi-05.vclass.kh, datasotre: Local-05 }
-    - { id: L06, host: esxi-01.vclass.kh, datasotre: Local-01 }
-    - { id: L07, host: esxi-02.vclass.kh, datasotre: Local-02 }
-    - { id: L08, host: esxi-03.vclass.kh, datasotre: Local-03 }
-    - { id: L09, host: esxi-04.vclass.kh, datasotre: Local-04 }
-    - { id: L10, host: esxi-05.vclass.kh, datasotre: Local-05 }
-    - { id: L11, host: esxi-01.vclass.kh, datasotre: Local-01 }
-    - { id: L12, host: esxi-02.vclass.kh, datasotre: Local-02 }
-    - { id: L13, host: esxi-03.vclass.kh, datasotre: Local-03 }
-    - { id: L14, host: esxi-04.vclass.kh, datasotre: Local-04 }
-    - { id: L15, host: esxi-05.vclass.kh, datasotre: Local-05 }
-    - { id: L16, host: esxi-01.vclass.kh, datasotre: Local-01 }
-    - { id: L17, host: esxi-02.vclass.kh, datasotre: Local-02 }
-    - { id: L18, host: esxi-03.vclass.kh, datasotre: Local-03 }
-    - { id: L19, host: esxi-04.vclass.kh, datasotre: Local-04 }
-    - { id: L20, host: esxi-05.vclass.kh, datasotre: Local-05 }
-    - { id: L21, host: esxi-01.vclass.kh, datasotre: Local-01 }
-    - { id: L22, host: esxi-02.vclass.kh, datasotre: Local-02 }
-    - { id: L23, host: esxi-03.vclass.kh, datasotre: Local-03 }
-    - { id: L24, host: esxi-04.vclass.kh, datasotre: Local-04 }
-    - { id: L25, host: esxi-05.vclass.kh, datasotre: Local-05 }
-    - { id: L26, host: esxi-01.vclass.kh, datasotre: Local-01 }
+    - { id: L00, host: esxi-04.vclass.kh, datastore: Local-04 }
+    - { id: L01, host: esxi-01.vclass.kh, datastore: Local-01 }
+    - { id: L02, host: esxi-02.vclass.kh, datastore: Local-02 }
+    - { id: L03, host: esxi-03.vclass.kh, datastore: Local-03 }
+    - { id: L04, host: esxi-04.vclass.kh, datastore: Local-04 }
+    - { id: L05, host: esxi-05.vclass.kh, datastore: Local-05 }
+    - { id: L06, host: esxi-01.vclass.kh, datastore: Local-01 }
+    - { id: L07, host: esxi-02.vclass.kh, datastore: Local-02 }
+    - { id: L08, host: esxi-03.vclass.kh, datastore: Local-03 }
+    - { id: L09, host: esxi-04.vclass.kh, datastore: Local-04 }
+    - { id: L10, host: esxi-05.vclass.kh, datastore: Local-05 }
+    - { id: L11, host: esxi-01.vclass.kh, datastore: Local-01 }
+    - { id: L12, host: esxi-02.vclass.kh, datastore: Local-02 }
+    - { id: L13, host: esxi-03.vclass.kh, datastore: Local-03 }
+    - { id: L14, host: esxi-04.vclass.kh, datastore: Local-04 }
+    - { id: L15, host: esxi-05.vclass.kh, datastore: Local-05 }
+    - { id: L16, host: esxi-01.vclass.kh, datastore: Local-01 }
+    - { id: L17, host: esxi-02.vclass.kh, datastore: Local-02 }
+    - { id: L18, host: esxi-03.vclass.kh, datastore: Local-03 }
+    - { id: L19, host: esxi-04.vclass.kh, datastore: Local-04 }
+    - { id: L20, host: esxi-05.vclass.kh, datastore: Local-05 }
+    - { id: L21, host: esxi-01.vclass.kh, datastore: Local-01 }
+    - { id: L22, host: esxi-02.vclass.kh, datastore: Local-02 }
+    - { id: L23, host: esxi-03.vclass.kh, datastore: Local-03 }
+    - { id: L24, host: esxi-04.vclass.kh, datastore: Local-04 }
+    - { id: L25, host: esxi-05.vclass.kh, datastore: Local-05 }
+    - { id: L26, host: esxi-01.vclass.kh, datastore: Local-01 }
 
     VMs_Setup:
     - { vm_name: -ESXi-01, host_name: sa-esxi-02, ip_addr: 10.10.10.12 }
@@ -114,7 +114,7 @@
       validate_certs: false
       role: Virtual Machine console user
       principal: "{{ item.sid }}@vclass.kh"
-      object_name: '{{ lid }}'
+      object_name: '{{ item.lid }}'
       state: present
       recursive: true
     loop: "{{ SID_LID }}"  
