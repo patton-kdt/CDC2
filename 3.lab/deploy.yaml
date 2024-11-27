@@ -210,7 +210,7 @@
     loop: "{{ LID_ESXi }}"  
     delegate_to: localhost
 
-  - name: 09. Change DC LAN Portgroup
+  - name: 10. Change DC LAN Portgroup
     community.vmware.vmware_guest_network:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -223,7 +223,7 @@
     loop: "{{ LID_ESXi }}"    
     delegate_to: localhost
 
-  - name: 10. Poweron DC
+  - name: 11. Poweron DC
     community.vmware.vmware_guest:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -232,11 +232,11 @@
       name: "{{ item.id + '-DC' }}"
       state: "poweredon"
       state_change_timeout: 60
-    loop: "{{ SID_ESXi }}"
+    loop: "{{ LID_ESXi }}"
     delegate_to: localhost
 
 
-  - name: 11. Deploy esxi vms from Template
+  - name: 12. Deploy esxi vms from Template
     community.vmware.vmware_guest:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -252,7 +252,7 @@
     loop: "{{ LID_ESXi | product(VMs_Setup) | list }}"
     delegate_to: localhost
 
-  - name: 12. Change ESXi-01 VM Nics
+  - name: 13. Change ESXi-01 VM Nics
     community.vmware.vmware_guest_network:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -266,7 +266,7 @@
     loop: "{{ LID_ESXi | product(ESXi_NICs) | list }}"
     delegate_to: localhost
 
-  - name: 13. Change ESXi-02 VM Nics
+  - name: 14. Change ESXi-02 VM Nics
     community.vmware.vmware_guest_network:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -280,7 +280,7 @@
     loop: "{{ LID_ESXi | product(ESXi_NICs) | list }}"
     delegate_to: localhost
 
-  - name: 14. Change ESXi-03 VM Nics
+  - name: 15. Change ESXi-03 VM Nics
     community.vmware.vmware_guest_network:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -294,7 +294,7 @@
     loop: "{{ LID_ESXi | product(ESXi_NICs) | list }}"
     delegate_to: localhost
 
-  - name: 15. Power on ESXi VMs
+  - name: 16. Power on ESXi VMs
     community.vmware.vmware_guest:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -305,12 +305,12 @@
     loop: "{{ LID_ESXi | product(VMs_Setup) | list }}"
     delegate_to: localhost
 
-  - name: 16. Waiting boot-up
+  - name: 17. Waiting boot-up
     wait_for:
       timeout: 120
     delegate_to: localhost
 
-  - name: 17. Configure ESXi VMs
+  - name: 18. Configure ESXi VMs
     community.vmware.vmware_vm_shell:
       hostname: '{{ vcenter_hostname }}'
       username: '{{ vcenter_username }}'
@@ -331,9 +331,9 @@
         /sbin/generate-certificates
         /sbin/auto-backup.sh
       wait_for_process: True
-    loop: "{{ SID_ESXi | product(VMs_Setup) | list }}"
+    loop: "{{ LID_ESXi | product(VMs_Setup) | list }}"
 
-  - name: 18. Reboot ESXi VMs
+  - name: 19. Reboot ESXi VMs
     community.vmware.vmware_guest_powerstate:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -342,11 +342,11 @@
       folder: "{{ datacenter_name + '/vm/' + parent_folder + '/' + item[0].id }}"
       name: "{{ item[0].id + item[1].vm_name }}"
       state: reboot-guest
-    loop: "{{ SID_ESXi | product(VMs_Setup) | list }}"
+    loop: "{{ LID_ESXi | product(VMs_Setup) | list }}"
     delegate_to: localhost
 
 
-  - name: 19. Deploy vCenter Server Appliance VM from Template
+  - name: 20. Deploy vCenter Server Appliance VM from Template
     community.vmware.vmware_guest:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -359,10 +359,10 @@
       esxi_hostname: '{{ item.host }}'
       datastore: "{{ item.datastore }}"
       template: "LAB-VCSA"
-    loop: "{{ SID_ESXi }}"
+    loop: "{{ LID_ESXi }}"
     delegate_to: localhost
 
-  - name: 20. Change VCSA VM Network Interfaces
+  - name: 21. Change VCSA VM Network Interfaces
     community.vmware.vmware_guest_network:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -373,10 +373,10 @@
       network_name: "{{ item.id + '-Mgmt' }}"
       state: present
       force: yes
-    loop: "{{ SID_ESXi }}"
+    loop: "{{ LID_ESXi }}"
     delegate_to: localhost
 
-  - name: 21. Poweron VCSA VM
+  - name: 22. Poweron VCSA VM
     community.vmware.vmware_guest:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
@@ -385,6 +385,48 @@
       name: "{{ item.id + '-VCSA' }}"
       state: "poweredon"
       state_change_timeout: 60
-    loop: "{{ SID_ESXi }}"
+    loop: "{{ LID_ESXi }}"
+    delegate_to: localhost
+
+  - name: 23. Deploy iSCSI Target VM from Template
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      name: "{{ item.id + '-Truenas' }}"
+      state: "poweredoff"
+      datacenter: '{{ datacenter_name }}'
+      folder: "{{ datacenter_name + '/vm/' + parent_folder + '/' + item.id }}"
+      esxi_hostname: '{{ item.host }}'
+      datastore: "{{ item.datastore }}"
+      template: "Lab-Truenas"
+    loop: "{{ LID_ESXi }}"
+    delegate_to: localhost
+
+  - name: 24. Change iSCSI Target VM Network Interfaces
+    community.vmware.vmware_guest_network:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      name: "{{ item.id + '-Truenas' }}"
+      label: "Network adapter 1"
+      network_name: "{{ item.id + '-Storage' }}"
+      state: present
+      force: yes
+    loop: "{{ LID_ESXi }}"
+    delegate_to: localhost
+
+  - name: 25. Poweron iSCSI Target VM
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      name: "{{ item.id + '-Truenas' }}"
+      state: "poweredon"
+      state_change_timeout: 60
+    loop: "{{ LID_ESXi }}"
     delegate_to: localhost
 
